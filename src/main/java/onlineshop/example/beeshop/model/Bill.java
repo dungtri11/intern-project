@@ -1,6 +1,7 @@
 package onlineshop.example.beeshop.model;
 
 import lombok.*;
+import onlineshop.example.beeshop.data.BillState;
 
 import javax.persistence.*;
 import java.util.Date;

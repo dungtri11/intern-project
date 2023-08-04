@@ -1,4 +1,4 @@
-package onlineshop.example.beeshop.model;
+package onlineshop.example.beeshop.data;
 
 public enum Type {
     MobilePhone,

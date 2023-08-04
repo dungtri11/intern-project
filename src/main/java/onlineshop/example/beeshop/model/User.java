@@ -2,6 +2,7 @@ package onlineshop.example.beeshop.model;
 
 
 import lombok.*;
+import onlineshop.example.beeshop.data.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

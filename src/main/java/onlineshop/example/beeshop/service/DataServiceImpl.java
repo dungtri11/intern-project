@@ -3,7 +3,7 @@ package onlineshop.example.beeshop.service;
 import onlineshop.example.beeshop.dto.ProductCriteriaDTO;
 import onlineshop.example.beeshop.dto.UserCriteriaDTO;
 import onlineshop.example.beeshop.model.Product;
-import onlineshop.example.beeshop.model.Role;
+import onlineshop.example.beeshop.data.Role;
 import onlineshop.example.beeshop.model.User;
 import onlineshop.example.beeshop.repository.ProductRepository;
 import onlineshop.example.beeshop.repository.UserRepository;

@@ -1,6 +1,9 @@
 package onlineshop.example.beeshop.model;
 
 import lombok.*;
+import onlineshop.example.beeshop.data.Manufacturer;
+import onlineshop.example.beeshop.data.Rate;
+import onlineshop.example.beeshop.data.Type;
 
 import javax.persistence.*;
 import java.util.HashSet;
