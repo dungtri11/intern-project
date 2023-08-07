@@ -1,5 +1,6 @@
 package onlineshop.example.beeshop.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 import onlineshop.example.beeshop.data.Manufacturer;
 import onlineshop.example.beeshop.data.Rate;
@@ -19,7 +20,7 @@ import java.util.Set;
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
     @Column(
             name = "name",
             nullable = false,
@@ -53,5 +54,6 @@ public class Category {
     )
     private Rate rate;
     @OneToMany(mappedBy = "category")
+    @JsonBackReference
     private Set<Product> products = new HashSet<>();
 }

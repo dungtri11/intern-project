@@ -14,7 +14,7 @@ import javax.persistence.*;
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "product_id", referencedColumnName = "id")
     private Product product;

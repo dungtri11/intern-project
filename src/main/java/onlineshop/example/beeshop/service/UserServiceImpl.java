@@ -1,11 +1,8 @@
 package onlineshop.example.beeshop.service;
 
-import onlineshop.example.beeshop.dto.ProductCriteriaDTO;
-import onlineshop.example.beeshop.dto.UserCriteriaDTO;
-import onlineshop.example.beeshop.model.Product;
 import onlineshop.example.beeshop.data.Role;
+import onlineshop.example.beeshop.dto.UserCriteriaDTO;
 import onlineshop.example.beeshop.model.User;
-import onlineshop.example.beeshop.repository.ProductRepository;
 import onlineshop.example.beeshop.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,14 +15,14 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
+
 @Service
-public class DataServiceImpl implements DataService{
+public class UserServiceImpl implements UserService{
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private ProductRepository productRepository;
-    @Autowired
     private EntityManager entityManager;
+
     @Override
     public List<User> findUserByCriteria(UserCriteriaDTO userCriteriaDTO) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -76,39 +73,37 @@ public class DataServiceImpl implements DataService{
         }
         return entityManager.createQuery(userCriteriaQuery).getResultList();
     }
+
     @Override
-    public User save(User user) {
+    public User viewById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public User addNew(User user) {
+        if (userRepository.existsById(user.getId())) {
+            return null;
+        }
         return userRepository.save(user);
     }
+
+    @Override
+    public User editInfo(User user) {
+        if (!userRepository.existsById(user.getId())) {
+            return null;
+        }
+        return userRepository.save(user);
+    }
+
+    @Override
+    public User invalidById(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new NullPointerException("Invalid User"));
+        user.setRole(Role.Invalid);
+        return user;
+    }
+
     @Override
     public void deleteById(Long id) {
         userRepository.deleteById(id);
     }
-
-    @Override
-    public List<Product> findProductByCriteria(ProductCriteriaDTO productCriteriaDTO) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Product> productCriteriaQuery = criteriaBuilder.createQuery(Product.class);
-        Root<Product> root = productCriteriaQuery.from(Product.class);
-        List<Predicate> predicates = new ArrayList<>();
-        if (productCriteriaDTO.getFilterId() != null) {
-            predicates.add(criteriaBuilder.equal(root.get("id"), Long.parseLong(productCriteriaDTO.getFilterId())));
-        }
-        if (productCriteriaDTO.getFilterCategory() != null) {
-            predicates.add(criteriaBuilder.equal(root.get("category_id"), Long.parseLong(productCriteriaDTO.getFilterCategory())));
-        }
-        if (productCriteriaDTO.getFilterProvider() != null) {
-            predicates.add(criteriaBuilder.equal(root.get("provider_id"), Long.parseLong(productCriteriaDTO.getFilterProvider())));
-        }
-        if (productCriteriaDTO.getFilterPrice() != null) {
-            predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("price"), Double.parseDouble(productCriteriaDTO.getFilterPrice())));
-        }
-        if (productCriteriaDTO.getFilterSale() != null) {
-            predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("sale"), Double.parseDouble(productCriteriaDTO.getFilterSale())));
-        }
-        productCriteriaQuery.where(predicates.toArray(new Predicate[0]));
-        return entityManager.createQuery(productCriteriaQuery).getResultList();
-    }
-
-
 }

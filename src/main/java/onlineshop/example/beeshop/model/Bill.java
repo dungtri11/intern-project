@@ -18,7 +18,7 @@ import java.util.Set;
 public class Bill {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
     @Column(
             name = "date"
     )

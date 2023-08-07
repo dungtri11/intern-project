@@ -1,6 +1,7 @@
 package onlineshop.example.beeshop.model;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 import onlineshop.example.beeshop.data.Role;
 import org.springframework.security.core.GrantedAuthority;
@@ -22,7 +23,7 @@ import java.util.Set;
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
     @Column(
             name = "username",
             unique = true,
@@ -65,6 +66,7 @@ public class User implements UserDetails {
     private Role role;
 
     @OneToMany(mappedBy = "provider")
+    @JsonBackReference
     private Set<Product> products = new HashSet<>();
 
     public User(String username, String password, String email, String phone, String address, Role role) {
