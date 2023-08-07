@@ -106,10 +106,9 @@ public class DataServiceImpl implements DataService{
         if (productCriteriaDTO.getFilterSale() != null) {
             predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("sale"), Double.parseDouble(productCriteriaDTO.getFilterSale())));
         }
+        productCriteriaQuery.where(predicates.toArray(new Predicate[0]));
         return entityManager.createQuery(productCriteriaQuery).getResultList();
     }
-
-
 
 
 }

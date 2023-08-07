@@ -1,6 +1,7 @@
 package onlineshop.example.beeshop.model;
 
 import lombok.*;
+import onlineshop.example.beeshop.data.ProductState;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -39,11 +40,12 @@ public class Product {
             nullable = false
     )
     private Double price;
+    @Enumerated(EnumType.STRING)
     @Column(
-            name = "remain",
+            name = "product_state",
             nullable = false
     )
-    private Integer remain;
+    private ProductState productState;
     @OneToMany(mappedBy = "product")
     private Set<Order> orders = new HashSet<>();
 }
