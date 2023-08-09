@@ -2,6 +2,8 @@ package onlineshop.example.beeshop.service;
 
 import onlineshop.example.beeshop.data.Role;
 import onlineshop.example.beeshop.dto.UserCriteriaDTO;
+import onlineshop.example.beeshop.exception.DuplicateUserException;
+import onlineshop.example.beeshop.exception.UserNotFoundException;
 import onlineshop.example.beeshop.model.User;
 import onlineshop.example.beeshop.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,13 +78,15 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User viewById(Long id) {
-        return userRepository.findById(id).orElse(null);
+        return userRepository.findById(id).orElseThrow(
+                () -> new UserNotFoundException("User with id = " + id + " isn't available")
+        );
     }
 
     @Override
     public User addNew(User user) {
-        if (userRepository.existsById(user.getId())) {
-            return null;
+        if (userRepository.existsByUsername(user.getUsername())) {
+            throw new DuplicateUserException("Some unique field has been duplicated");
         }
         return userRepository.save(user);
     }
@@ -90,14 +94,16 @@ public class UserServiceImpl implements UserService{
     @Override
     public User editInfo(User user) {
         if (!userRepository.existsById(user.getId())) {
-            return null;
+            throw new UserNotFoundException("User with id = " + user.getId() + " isn't available");
         }
         return userRepository.save(user);
     }
 
     @Override
     public User invalidById(Long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new NullPointerException("Invalid User"));
+        User user = userRepository.findById(id).orElseThrow(
+                () -> new UserNotFoundException("User with id = " + id + " isn't available")
+        );
         user.setRole(Role.Invalid);
         return user;
     }

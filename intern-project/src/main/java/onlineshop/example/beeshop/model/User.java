@@ -39,6 +39,7 @@ public class User implements UserDetails {
             length = 64
     )
     private String password;
+
     @Column(
             name = "email",
             length = 64,
