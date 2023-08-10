@@ -1,7 +1,7 @@
 package onlineshop.example.beeshop.service;
 
 import onlineshop.example.beeshop.dto.ProductCriteriaDTO;
-import onlineshop.example.beeshop.model.Product;
+import onlineshop.example.beeshop.entity.Product;
 
 import java.util.List;
 

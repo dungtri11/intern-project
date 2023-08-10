@@ -1,9 +1,10 @@
-package onlineshop.example.beeshop.model;
+package onlineshop.example.beeshop.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
-import onlineshop.example.beeshop.data.Role;
+import onlineshop.example.beeshop.common.AccountStatus;
+import onlineshop.example.beeshop.common.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -14,68 +15,34 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "[user]")
+@Table(name = "[account]")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-@ToString
-public class User implements UserDetails {
+public class Account implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Column(
-            name = "username",
-            unique = true,
-            updatable = false,
-            length = 64,
-            nullable = false
-    )
+
+    @Column(name = "username", unique = true, updatable = false, length = 64, nullable = false)
     private String username;
 
-    @Column(
-            name = "password",
-            nullable = false,
-            length = 64
-    )
+    @Column(name = "password", nullable = false, length = 64)
     private String password;
 
-    @Column(
-            name = "email",
-            length = 64,
-            unique = true
-    )
-    private String email;
-    @Column(
-            name = "phone",
-            length = 16,
-            unique = true,
-            nullable = false
-    )
-    private String phone;
-    @Column(
-            name = "address",
-            length = 128
-    )
-    private String address;
     @Enumerated(EnumType.STRING)
-    @Column(
-            name = "role",
-            length = 16,
-            updatable = false
-    )
+    @Column(name = "status", nullable = false)
+    private AccountStatus status;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", length = 16, updatable = false)
     private Role role;
 
-    @OneToMany(mappedBy = "provider")
-    @JsonBackReference
-    private Set<Product> products = new HashSet<>();
-
-    public User(String username, String password, String email, String phone, String address, Role role) {
+    public Account(String username, String password, AccountStatus status, Role role) {
         this.username = username;
         this.password = password;
-        this.email = email;
-        this.phone = phone;
-        this.address = address;
+        this.status = status;
         this.role = role;
     }
 

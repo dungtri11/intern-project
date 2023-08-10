@@ -1,6 +1,6 @@
 package onlineshop.example.beeshop.jwt;
 
-import onlineshop.example.beeshop.repository.UserRepository;
+import onlineshop.example.beeshop.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,7 +20,7 @@ import java.util.List;
 @Component
 public class JwtFilter extends OncePerRequestFilter {
     @Autowired
-    private UserRepository userRepository;
+    private AccountRepository accountRepository;
 
     @Autowired
     private JwtUtils jwtUtils;
@@ -35,7 +35,7 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         final String token = header.split(" ")[1].trim();
-        UserDetails userDetails = userRepository.findUserByUsername(jwtUtils.getUsernameFromToken(token))
+        UserDetails userDetails = accountRepository.findUserByUsername(jwtUtils.getUsernameFromToken(token))
                 .orElse(null);
 
         if (!jwtUtils.validateToken(token,userDetails)) {

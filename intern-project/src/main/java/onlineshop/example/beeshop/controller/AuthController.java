@@ -2,7 +2,7 @@ package onlineshop.example.beeshop.controller;
 
 import onlineshop.example.beeshop.dto.AuthCredentialsRequestDTO;
 import onlineshop.example.beeshop.jwt.JwtUtils;
-import onlineshop.example.beeshop.model.User;
+import onlineshop.example.beeshop.entity.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -30,14 +30,14 @@ public class AuthController {
                             )
                     );
 
-            User user = (User) authenticate.getPrincipal();
-            user.setPassword(null);
+            Account account = (Account) authenticate.getPrincipal();
+            account.setPassword(null);
             return ResponseEntity.ok()
                     .header(
                             HttpHeaders.AUTHORIZATION,
-                            jwtTokenUtil.generateToken(user)
+                            jwtTokenUtil.generateToken(account)
                     )
-                    .body(user);
+                    .body(account);
         } catch (BadCredentialsException ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }

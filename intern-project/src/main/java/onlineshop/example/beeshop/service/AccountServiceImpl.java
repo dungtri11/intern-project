@@ -1,11 +1,11 @@
 package onlineshop.example.beeshop.service;
 
-import onlineshop.example.beeshop.data.Role;
+import onlineshop.example.beeshop.common.Role;
 import onlineshop.example.beeshop.dto.UserCriteriaDTO;
 import onlineshop.example.beeshop.exception.DuplicateUserException;
-import onlineshop.example.beeshop.exception.UserNotFoundException;
-import onlineshop.example.beeshop.model.User;
-import onlineshop.example.beeshop.repository.UserRepository;
+import onlineshop.example.beeshop.exception.AccountNotFoundException;
+import onlineshop.example.beeshop.entity.Account;
+import onlineshop.example.beeshop.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,17 +19,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class AccountServiceImpl implements AccountService {
     @Autowired
-    private UserRepository userRepository;
+    private AccountRepository accountRepository;
     @Autowired
     private EntityManager entityManager;
 
     @Override
-    public List<User> findUserByCriteria(UserCriteriaDTO userCriteriaDTO) {
+    public List<Account> findUserByCriteria(UserCriteriaDTO userCriteriaDTO) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<User> userCriteriaQuery = criteriaBuilder.createQuery(User.class);
-        Root<User> root = userCriteriaQuery.from(User.class);
+        CriteriaQuery<Account> userCriteriaQuery = criteriaBuilder.createQuery(Account.class);
+        Root<Account> root = userCriteriaQuery.from(Account.class);
         List<Predicate> predicates = new ArrayList<>();
         if (userCriteriaDTO.getFilterUsername() != null) {
             predicates.add(criteriaBuilder.like(root.get("username"),userCriteriaDTO.getFilterUsername() + "%"));
@@ -63,10 +63,10 @@ public class UserServiceImpl implements UserService{
             int pageNumber = Integer.parseInt(userCriteriaDTO.getPage());
             CriteriaQuery<Long> countQuery = criteriaBuilder
                     .createQuery(Long.class);
-            countQuery.select(criteriaBuilder.count(countQuery.from(User.class)));
+            countQuery.select(criteriaBuilder.count(countQuery.from(Account.class)));
             Long count = entityManager.createQuery(countQuery).getSingleResult();
 
-            TypedQuery<User> userTypedQuery = entityManager.createQuery(userCriteriaQuery.select(root));
+            TypedQuery<Account> userTypedQuery = entityManager.createQuery(userCriteriaQuery.select(root));
             userTypedQuery.setMaxResults(pageSize);
             userTypedQuery.setFirstResult(pageNumber - 1);
 
@@ -77,39 +77,41 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public User viewById(Long id) {
-        return userRepository.findById(id).orElseThrow(
-                () -> new UserNotFoundException("User with id = " + id + " isn't available")
-        );
+    public Account viewById(Long id) {
+        Account account = accountRepository.findById(id).orElseThrow(
+                () -> new AccountNotFoundException("Account with id = " + id + " isn't available"));
+        return account;
+
     }
 
     @Override
-    public User addNew(User user) {
-        if (userRepository.existsByUsername(user.getUsername())) {
+    public Account addNew(Account account) {
+        if (accountRepository.existsByUsername(account.getUsername())) {
             throw new DuplicateUserException("Some unique field has been duplicated");
         }
-        return userRepository.save(user);
+
+        return accountRepository.save(account);
     }
 
     @Override
-    public User editInfo(User user) {
-        if (!userRepository.existsById(user.getId())) {
-            throw new UserNotFoundException("User with id = " + user.getId() + " isn't available");
+    public Account editInfo(Account account) {
+        if (!accountRepository.existsById(account.getId())) {
+            throw new AccountNotFoundException("Account with id = " + account.getId() + " isn't available");
         }
-        return userRepository.save(user);
+        return accountRepository.save(account);
     }
 
     @Override
-    public User invalidById(Long id) {
-        User user = userRepository.findById(id).orElseThrow(
-                () -> new UserNotFoundException("User with id = " + id + " isn't available")
+    public Account invalidById(Long id) {
+        Account account = accountRepository.findById(id).orElseThrow(
+                () -> new AccountNotFoundException("Account with id = " + id + " isn't available")
         );
-        user.setRole(Role.Invalid);
-        return user;
+        account.setRole(Role.Invalid);
+        return account;
     }
 
     @Override
     public void deleteById(Long id) {
-        userRepository.deleteById(id);
+        accountRepository.deleteById(id);
     }
 }
