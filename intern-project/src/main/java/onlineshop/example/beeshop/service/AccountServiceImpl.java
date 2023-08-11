@@ -1,7 +1,7 @@
 package onlineshop.example.beeshop.service;
 
 import onlineshop.example.beeshop.common.Role;
-import onlineshop.example.beeshop.dto.UserCriteriaDTO;
+import onlineshop.example.beeshop.model.AccountCriteriaModel;
 import onlineshop.example.beeshop.exception.DuplicateUserException;
 import onlineshop.example.beeshop.exception.AccountNotFoundException;
 import onlineshop.example.beeshop.entity.Account;
@@ -26,54 +26,42 @@ public class AccountServiceImpl implements AccountService {
     private EntityManager entityManager;
 
     @Override
-    public List<Account> findUserByCriteria(UserCriteriaDTO userCriteriaDTO) {
+    public List<Account> findUserByCriteria(AccountCriteriaModel accountCriteriaModel) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Account> userCriteriaQuery = criteriaBuilder.createQuery(Account.class);
-        Root<Account> root = userCriteriaQuery.from(Account.class);
+        CriteriaQuery<Account> accountCriteriaQuery = criteriaBuilder.createQuery(Account.class);
+        Root<Account> root = accountCriteriaQuery.from(Account.class);
         List<Predicate> predicates = new ArrayList<>();
-        if (userCriteriaDTO.getFilterUsername() != null) {
-            predicates.add(criteriaBuilder.like(root.get("username"),userCriteriaDTO.getFilterUsername() + "%"));
+        if (accountCriteriaModel.getFilterUsername() != null) {
+            predicates.add(criteriaBuilder.like(root.get("username"), accountCriteriaModel.getFilterUsername() + "%"));
         }
-        if (userCriteriaDTO.getFilterAddress() != null) {
-            predicates.add(criteriaBuilder.like(root.get("address"), "%" + userCriteriaDTO.getFilterAddress() + "%"));
+        if (accountCriteriaModel.getFilterRole() != null) {
+            predicates.add(criteriaBuilder.equal(root.get("role"), Enum.valueOf(Role.class, accountCriteriaModel.getFilterRole())));
         }
-        if (userCriteriaDTO.getFilterEmail() != null) {
-            predicates.add(criteriaBuilder.like(root.get("email"),userCriteriaDTO.getFilterEmail() + "%"));
-        }
-        if (userCriteriaDTO.getFilterPhone() != null) {
-            predicates.add(criteriaBuilder.like(root.get("phone"),userCriteriaDTO.getFilterPhone() + "%"));
-        }
-        if (userCriteriaDTO.getFilterRole() != null) {
-            predicates.add(criteriaBuilder.equal(root.get("role"), Enum.valueOf(Role.class, userCriteriaDTO.getFilterRole())));
-        }
-        if (userCriteriaDTO.getOrderBy() != null) {
-            userCriteriaQuery.select(root);
-            if (userCriteriaDTO.getOrderBy().equals("asc")) {
-                userCriteriaQuery.orderBy(criteriaBuilder.asc(root.get("username")));
+        if (accountCriteriaModel.getOrderBy() != null) {
+            accountCriteriaQuery.select(root);
+            if (accountCriteriaModel.getOrderBy().equals("asc")) {
+                accountCriteriaQuery.orderBy(criteriaBuilder.asc(root.get("username")));
             }
-            if (userCriteriaDTO.getOrderBy().equals("desc")) {
-                userCriteriaQuery.orderBy(criteriaBuilder.desc(root.get("username")));
+            if (accountCriteriaModel.getOrderBy().equals("desc")) {
+                accountCriteriaQuery.orderBy(criteriaBuilder.desc(root.get("username")));
             }
         }
 
-        userCriteriaQuery.where(predicates.toArray(new Predicate[0]));
+        accountCriteriaQuery.where(predicates.toArray(new Predicate[0]));
 
-        if (userCriteriaDTO.getPage() != null) {
+        if (accountCriteriaModel.getPage() != null) {
             int pageSize = 1;
-            int pageNumber = Integer.parseInt(userCriteriaDTO.getPage());
-            CriteriaQuery<Long> countQuery = criteriaBuilder
-                    .createQuery(Long.class);
-            countQuery.select(criteriaBuilder.count(countQuery.from(Account.class)));
-            Long count = entityManager.createQuery(countQuery).getSingleResult();
+            int pageNumber = Integer.parseInt(accountCriteriaModel.getPage());
 
-            TypedQuery<Account> userTypedQuery = entityManager.createQuery(userCriteriaQuery.select(root));
+
+            TypedQuery<Account> userTypedQuery = entityManager.createQuery(accountCriteriaQuery.select(root));
             userTypedQuery.setMaxResults(pageSize);
             userTypedQuery.setFirstResult(pageNumber - 1);
 
             return userTypedQuery.getResultList();
 
         }
-        return entityManager.createQuery(userCriteriaQuery).getResultList();
+        return entityManager.createQuery(accountCriteriaQuery).getResultList();
     }
 
     @Override

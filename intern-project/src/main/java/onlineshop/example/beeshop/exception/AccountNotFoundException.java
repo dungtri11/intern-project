@@ -1,6 +1,6 @@
 package onlineshop.example.beeshop.exception;
 
-public class AccountNotFoundException extends EntityNotFoundException{
+public class AccountNotFoundException extends RuntimeException{
 
     public AccountNotFoundException(String message) {
         super(message);

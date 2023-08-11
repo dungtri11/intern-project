@@ -30,15 +30,18 @@ public class Account {
     @Column(name = "status", nullable = false)
     private AccountStatus status;
 
+    @Column(name = "[key]", nullable = false, length = 64)
+    private String identifyKey;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "role", length = 16, updatable = false)
     private Role role;
 
-    public Account(String username, String password, AccountStatus status, Role role) {
+    public Account(String username, String password, AccountStatus status, String identifyKey, Role role) {
         this.username = username;
         this.password = password;
         this.status = status;
+        this.identifyKey = identifyKey;
         this.role = role;
     }
-
 }

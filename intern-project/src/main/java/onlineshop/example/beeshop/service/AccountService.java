@@ -1,12 +1,12 @@
 package onlineshop.example.beeshop.service;
 
-import onlineshop.example.beeshop.dto.UserCriteriaDTO;
+import onlineshop.example.beeshop.model.AccountCriteriaModel;
 import onlineshop.example.beeshop.entity.Account;
 
 import java.util.List;
 
 public interface AccountService {
-    public List<Account> findUserByCriteria(UserCriteriaDTO userCriteriaDTO);
+    public List<Account> findUserByCriteria(AccountCriteriaModel accountCriteriaModel);
 
     public Account viewById(Long id);
 

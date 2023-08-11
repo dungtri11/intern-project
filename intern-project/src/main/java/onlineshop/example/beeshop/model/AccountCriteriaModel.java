@@ -1,4 +1,4 @@
-package onlineshop.example.beeshop.dto;
+package onlineshop.example.beeshop.model;
 
 import lombok.*;
 
@@ -9,13 +9,12 @@ import javax.validation.constraints.Pattern;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserCriteriaDTO {
+public class AccountCriteriaModel {
     private String filterUsername;
-    @Pattern(regexp = "^Customer%|^ShopOwner$|^Provider$")
+    @Pattern(regexp = "^Customer%|^Shop_Owner$|^Provider$")
     private String filterRole;
-    private String filterEmail;
-    private String filterPhone;
-    private String filterAddress;
+    @Pattern(regexp = "^Online%|^Offline$")
+    private String filterStatus;
     @Pattern(regexp = "^asc%|^desc$|^")
     private String orderBy;
     @Pattern(regexp = "^[0-9]+$")

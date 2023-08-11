@@ -1,16 +1,15 @@
-package onlineshop.example.beeshop.dto;
+package onlineshop.example.beeshop.model;
 
 import lombok.*;
 
-@ToString
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductCriteriaDTO {
+public class ProductCriteriaModel {
     private String filterId;
     private String filterCategory;
-    private String filterProvider;
+    private String filterSupplier;
     private String filterSale;
     private String filterPrice;
     private String orderBy;

@@ -1,6 +1,7 @@
 package onlineshop.example.beeshop.controller;
 
-import onlineshop.example.beeshop.dto.UserCriteriaDTO;
+import onlineshop.example.beeshop.annotation.Authorized;
+import onlineshop.example.beeshop.model.AccountCriteriaModel;
 import onlineshop.example.beeshop.entity.Account;
 import onlineshop.example.beeshop.service.AccountService;
 import org.slf4j.Logger;
@@ -21,7 +22,8 @@ public class AccountController {
 
     private AccountService accountService;
     @GetMapping
-    public List<Account> filterUser(@Valid UserCriteriaDTO userCriteria)  {
+    @Authorized(admin = false)
+    public List<Account> filterUser(@Valid AccountCriteriaModel userCriteria )  {
         logger.info(userCriteria.toString());
         return accountService.findUserByCriteria(userCriteria);
     }
