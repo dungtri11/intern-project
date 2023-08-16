@@ -4,6 +4,7 @@ import onlineshop.example.beeshop.dto.ProductBriefResponseDTO;
 import onlineshop.example.beeshop.model.ProductCriteriaModel;
 import onlineshop.example.beeshop.entity.Product;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface ProductService {
@@ -17,5 +18,5 @@ public interface ProductService {
 
     public void deleteById(Long id);
 
-    public List<ProductBriefResponseDTO> getRecommendProduct(Long userid);
+    public List<ProductBriefResponseDTO> getRecommendProduct(Long userid) throws IOException;
 }

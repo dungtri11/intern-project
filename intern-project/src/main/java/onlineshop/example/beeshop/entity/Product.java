@@ -33,6 +33,10 @@ public class Product {
     @JoinColumn(name = "supplier_id", referencedColumnName = "id")
     private Supplier supplier;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "image_id", referencedColumnName = "id")
+    private Image image;
+
     @Column(name = "cost", nullable = false)
     private Double cost;
 
@@ -50,7 +54,7 @@ public class Product {
     private ProductRate productRate;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
+    @Column(name = "status", nullable = false, length = 16)
     private ProductStatus status;
 
     @OneToMany(mappedBy = "product")

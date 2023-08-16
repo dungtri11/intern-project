@@ -1,5 +1,6 @@
 package onlineshop.example.beeshop.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 import onlineshop.example.beeshop.common.OrderStatus;
 
@@ -20,6 +21,7 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @OneToMany(mappedBy = "order")
+    @JsonBackReference
     private Set<OrderDetail> orderDetails = new HashSet<>();
 
     @Column(name = "date", nullable = false)
@@ -28,13 +30,16 @@ public class Order {
     @Column(name = "total", nullable = false)
     private Double total;
 
-    @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false, length = 16)
     private OrderStatus status;
 
     @ManyToOne(cascade = CascadeType.ALL)
+    @JsonBackReference
     @JoinColumn(name = "customer_id", referencedColumnName = "id")
     private Customer customer;
 
     @ManyToMany(mappedBy = "orders")
+    @JsonBackReference
     private Set<Voucher> vouchers = new HashSet<>();
 }

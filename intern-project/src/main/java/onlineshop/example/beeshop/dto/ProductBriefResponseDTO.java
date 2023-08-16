@@ -1,11 +1,12 @@
 package onlineshop.example.beeshop.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import onlineshop.example.beeshop.common.ProductCategory;
 import onlineshop.example.beeshop.common.ProductRate;
 import onlineshop.example.beeshop.common.ProductStatus;
 import onlineshop.example.beeshop.entity.Product;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 @Getter
 @Setter
@@ -13,6 +14,7 @@ public class ProductBriefResponseDTO {
     private Long id;
     private String name;
     private ProductCategory productCategory;
+    private String imageUrl;
     private Double cost;
     private Double sale;
     private Double price;
@@ -29,4 +31,5 @@ public class ProductBriefResponseDTO {
         this.rate = product.getProductRate();
         this.status = product.getStatus();
     }
+
 }

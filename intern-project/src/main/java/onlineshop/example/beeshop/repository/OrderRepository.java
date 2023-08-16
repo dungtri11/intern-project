@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
@@ -23,4 +24,9 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             "order by count(od.id) desc\n" +
             "limit 3", nativeQuery = true)
     public List<String> recommendCategory(@Param("customer_id") Long customerId);
+
+    @Query(value = "SELECT * FROM \n" +
+            "beeshop.order\n" +
+            "where customer_id = :customer_id and status = 'Pending'", nativeQuery = true)
+    public Optional<Order> findCart(@Param("customer_id") Long customerId);
 }
