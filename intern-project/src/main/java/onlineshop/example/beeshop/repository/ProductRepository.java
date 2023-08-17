@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ProductRepository extends JpaRepository<Product, Long> {
+public interface ProductRepository extends JpaRepository<Product, Long>, ProductExtendRepository {
     @Query(value = "select count(product.id) as remain " +
             "from product where provider_id = :provider and category_id = :category " +
             "order by remain desc", nativeQuery = true)
@@ -23,5 +23,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "limit 2\n"
             , nativeQuery = true)
     public List<Product> recommendProduct(@Param("category") String category);
+
 
 }

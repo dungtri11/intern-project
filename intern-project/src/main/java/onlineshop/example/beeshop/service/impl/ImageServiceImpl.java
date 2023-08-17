@@ -1,7 +1,8 @@
-package onlineshop.example.beeshop.service;
+package onlineshop.example.beeshop.service.impl;
 
 import onlineshop.example.beeshop.entity.Image;
 import onlineshop.example.beeshop.repository.ImageRepository;
+import onlineshop.example.beeshop.service.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 @Service
-public class ImageServiceImpl implements ImageService{
+public class ImageServiceImpl implements ImageService {
     @Autowired
     private ImageRepository imageRepository;
     @Autowired

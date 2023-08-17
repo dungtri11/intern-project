@@ -5,10 +5,7 @@ import onlineshop.example.beeshop.repository.OrderRepository;
 import onlineshop.example.beeshop.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class OrderController {
@@ -17,6 +14,14 @@ public class OrderController {
     @RequestMapping(value = "/cart/{customerId}", method = RequestMethod.GET)
     public ResponseEntity<?> showCart(@PathVariable Long customerId) {
         Order order = orderService.getCart(customerId);
+        return ResponseEntity.ok(order);
+    }
+
+    @RequestMapping(value = "/checkout/{orderId}", method = RequestMethod.POST)
+    public ResponseEntity<?> checkOutOrder(@PathVariable Long orderId,
+                                           @RequestParam("address") String address,
+                                           @RequestParam("payment") String payment) {
+        Order order = orderService.checkOutOrder(orderId, address, payment);
         return ResponseEntity.ok(order);
     }
 }

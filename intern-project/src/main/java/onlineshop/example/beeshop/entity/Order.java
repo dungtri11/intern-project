@@ -3,6 +3,7 @@ package onlineshop.example.beeshop.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 import onlineshop.example.beeshop.common.OrderStatus;
+import onlineshop.example.beeshop.common.Payment;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -34,6 +35,13 @@ public class Order {
     @Column(name = "status", nullable = false, length = 16)
     private OrderStatus status;
 
+    @Column(name = "address", length = 128)
+    private String address;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "payment", length = 16)
+    private Payment payment;
+
     @ManyToOne(cascade = CascadeType.ALL)
     @JsonBackReference
     @JoinColumn(name = "customer_id", referencedColumnName = "id")
@@ -42,4 +50,13 @@ public class Order {
     @ManyToMany(mappedBy = "orders")
     @JsonBackReference
     private Set<Voucher> vouchers = new HashSet<>();
+
+
+    public Order(long id, Timestamp date, Double total, OrderStatus status, Customer customer) {
+        this.id = id;
+        this.date = date;
+        this.total = total;
+        this.status = status;
+        this.customer = customer;
+    }
 }

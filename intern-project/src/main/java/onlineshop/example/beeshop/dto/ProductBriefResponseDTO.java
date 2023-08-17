@@ -6,6 +6,7 @@ import onlineshop.example.beeshop.common.ProductRate;
 import onlineshop.example.beeshop.common.ProductStatus;
 import onlineshop.example.beeshop.entity.Product;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 @Getter
@@ -21,6 +22,7 @@ public class ProductBriefResponseDTO {
     private ProductRate rate;
     private ProductStatus status;
 
+
     public ProductBriefResponseDTO(Product product) {
         this.id = product.getId();
         this.name = product.getName();
@@ -30,6 +32,7 @@ public class ProductBriefResponseDTO {
         this.price = product.getPrice();
         this.rate = product.getProductRate();
         this.status = product.getStatus();
+        this.imageUrl = "http://localhost:8080/img/download/" + product.getImage().getName();
     }
 
 }

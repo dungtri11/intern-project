@@ -1,4 +1,4 @@
-package onlineshop.example.beeshop.service;
+package onlineshop.example.beeshop.service.impl;
 
 import onlineshop.example.beeshop.dto.ProductBriefResponseDTO;
 import onlineshop.example.beeshop.entity.Image;
@@ -7,6 +7,7 @@ import onlineshop.example.beeshop.entity.Product;
 import onlineshop.example.beeshop.repository.ImageRepository;
 import onlineshop.example.beeshop.repository.OrderRepository;
 import onlineshop.example.beeshop.repository.ProductRepository;
+import onlineshop.example.beeshop.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class ProductServiceImpl implements ProductService{
+public class ProductServiceImpl implements ProductService {
     @Autowired
     private EntityManager entityManager;
     @Autowired
@@ -36,54 +37,15 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public List<ProductBriefResponseDTO> findProductByCriteria(ProductCriteriaModel productCriteriaModel) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Product> productCriteriaQuery = criteriaBuilder.createQuery(Product.class);
-        Root<Product> root = productCriteriaQuery.from(Product.class);
-        List<Predicate> predicates = new ArrayList<>();
-        if (productCriteriaModel.getFilterId() != null) {
-            predicates.add(
-                    criteriaBuilder.equal(root.get("id"),
-                    Long.parseLong(productCriteriaModel.getFilterId()))
-            );
+        List<ProductBriefResponseDTO> responseDTOS = new ArrayList<>();
+        for (Product product : productRepository.findProductByCriteria(productCriteriaModel)) {
+            ProductBriefResponseDTO productBriefResponseDTO = new ProductBriefResponseDTO(product);
+            Image image = imageRepository.findById(product.getImage().getId())
+                    .orElseThrow(() -> new RuntimeException("file not found"));
+            productBriefResponseDTO.setImageUrl(environment.getProperty("environment.root-path") + image.getName());
+            responseDTOS.add(productBriefResponseDTO);
         }
-        if (productCriteriaModel.getFilterCategory() != null) {
-            predicates.add(
-                    criteriaBuilder.equal(root.get("category"),
-                    productCriteriaModel.getFilterCategory())
-            );
-        }
-        if (productCriteriaModel.getFilterSupplier() != null) {
-            predicates.add(
-                    criteriaBuilder.equal(root.get("supplier_id"),
-                    Long.parseLong(productCriteriaModel.getFilterSupplier()))
-            );
-        }
-        if (productCriteriaModel.getFilterPrice() != null) {
-            predicates.add(
-                    criteriaBuilder.lessThanOrEqualTo(root.get("price"),
-                    Double.parseDouble(productCriteriaModel.getFilterPrice()))
-            );
-        }
-        if (productCriteriaModel.getFilterSale() != null) {
-            predicates.add(
-                    criteriaBuilder.greaterThanOrEqualTo(root.get("sale"),
-                    Double.parseDouble(productCriteriaModel.getFilterSale()))
-            );
-        }
-        if (productCriteriaModel.getOrderBy() != null) {
-            productCriteriaQuery.select(root);
-
-            productCriteriaQuery.orderBy(
-                    criteriaBuilder.desc(root.get("sale")),
-                    criteriaBuilder.asc(root.get("price")),
-                    criteriaBuilder.asc(root.get("name"))
-            );
-        }
-
-
-        productCriteriaQuery.where(predicates.toArray(new Predicate[0]));
-        return entityManager.createQuery(productCriteriaQuery).getResultList().stream()
-                .map(product -> new ProductBriefResponseDTO(product)).collect(Collectors.toList());
+        return responseDTOS;
     }
     @Override
     public List<ProductBriefResponseDTO> getRecommendProduct(Long userid) throws IOException {

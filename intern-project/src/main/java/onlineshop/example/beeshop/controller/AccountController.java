@@ -19,7 +19,6 @@ import java.util.List;
 public class AccountController {
     Logger logger = LoggerFactory.getLogger(AccountController.class);
     @Autowired
-
     private AccountService accountService;
     @GetMapping
     @Authorized(admin = false)
