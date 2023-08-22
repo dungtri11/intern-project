@@ -2,8 +2,8 @@ package onlineshop.example.beeshop.service.impl;
 
 import onlineshop.example.beeshop.common.Role;
 import onlineshop.example.beeshop.model.AccountCriteriaModel;
-import onlineshop.example.beeshop.exception.DuplicateUserException;
-import onlineshop.example.beeshop.exception.AccountNotFoundException;
+import onlineshop.example.beeshop.exception.exception.DuplicateUserException;
+import onlineshop.example.beeshop.exception.exception.AccountNotFoundException;
 import onlineshop.example.beeshop.entity.Account;
 import onlineshop.example.beeshop.repository.AccountRepository;
 import onlineshop.example.beeshop.service.AccountService;
@@ -11,12 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -33,8 +27,10 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account viewById(Long id) {
+
         Account account = accountRepository.findById(id).orElseThrow(
                 () -> new AccountNotFoundException("Account with id = " + id + " isn't available"));
+
         return account;
 
     }
