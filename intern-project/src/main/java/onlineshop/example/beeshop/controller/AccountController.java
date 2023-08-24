@@ -1,9 +1,10 @@
 package onlineshop.example.beeshop.controller;
 
-import onlineshop.example.beeshop.annotation.Authorized;
+import onlineshop.example.beeshop.annotation.Authority;
 import onlineshop.example.beeshop.model.AccountCriteriaModel;
 import onlineshop.example.beeshop.entity.Account;
 import onlineshop.example.beeshop.service.AccountService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,37 +15,35 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/account")
 @CrossOrigin("http://localhost:3000")
 public class AccountController {
     Logger logger = LoggerFactory.getLogger(AccountController.class);
     @Autowired
     private AccountService accountService;
-    @GetMapping
-    @Authorized(admin = false)
+
+    @RequestMapping(value = "/account", method = RequestMethod.GET)
     public List<Account> filterUser(@Valid AccountCriteriaModel userCriteria )  {
         logger.info(userCriteria.toString());
         return accountService.findUserByCriteria(userCriteria);
     }
-
-    @GetMapping("/details/{id}")
+    @Authority(admin = true)
+    @RequestMapping(value = "/account/details/{id}", method = RequestMethod.GET)
     public Account viewDetail(@PathVariable("id") Long id) {
-
         return accountService.viewById(id);
     }
 
-    @PutMapping("/edit/{id}")
+    @RequestMapping(value = "/account/edit/{id}", method = RequestMethod.PUT)
     public Account editInfo(@PathVariable("id") Long id, @RequestBody Account account) {
 
         return accountService.editInfo(account);
     }
 
-    @PutMapping("/invalid/{id}")
+    @RequestMapping(value = "/account/invalid/{id}", method = RequestMethod.PUT)
     public Account invalidUser(@PathVariable("id") Long id) {
         return accountService.invalidById(id);
     }
 
-    @PostMapping("/add")
+    @RequestMapping(value = "/account/add", method = RequestMethod.POST)
     public Account addNew(@RequestBody Account account) {
         return accountService.addNew(account);
     }
